@@ -12,8 +12,20 @@ namespace CasoI.API.Controllers
         public TaskController(I_TaskBL TaskBL) => _TaskBL = TaskBL;
 
         [HttpGet]
-        public async Task<List<CreateTaskDTO>> GetAllTasks()
-            => await _TaskBL.GetAllTasks();
+        public async Task<ActionResult<List<CreateTaskDTO>>> GetAllTasks()
+        {
+            try
+            {
+                var result = await _TaskBL.GetAllTasks();
+                if (result == null) return Ok(new List<CreateTaskDTO>());
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Esto detendrá la API aquí y podrás ver el error real en 'ex'
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<CreateTaskDTO>> GetTaskById(int id)

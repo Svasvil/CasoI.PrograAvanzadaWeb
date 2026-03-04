@@ -5,7 +5,6 @@ using CasoI.API.DTOS;
 using CasoI.API.DTOS.CreateTask_DTO;
 using CasoI.API.Models.BoardViewModel;
 using System;
-using System.Data.Entity;
 
 
 namespace CasoI.API.BussinessLogic.Logic

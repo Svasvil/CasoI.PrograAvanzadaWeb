@@ -1,4 +1,4 @@
-@CasoI.API_HostAddress = http://localhost:5161
+@CasoI.API_HostAddress = http://localhost:5001
 
 GET {{CasoI.API_HostAddress}}/weatherforecast/
 Accept: application/json

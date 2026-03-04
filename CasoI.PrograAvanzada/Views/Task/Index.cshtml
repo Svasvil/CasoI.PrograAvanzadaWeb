@@ -1,0 +1,28 @@
+﻿@model IEnumerable<CasoI.PrograAvanzada.Models.TaskModelView>
+@using CasoI.PrograAvanzada.Models
+<h2>Agile Board</h2>
+
+<div class="row">
+    @foreach (var column in new[]
+        {
+        new { Title = "Backlog", Status = UserStoryStatus.Backlog },
+        new { Title = "To Do", Status = UserStoryStatus.ToDo },
+        new { Title = "In Progress", Status = UserStoryStatus.InProgress },
+        new { Title = "Done", Status = UserStoryStatus.Done }
+        })
+    {
+        <div class="col-md-3">
+            <h4>@column.Title</h4>
+            @foreach (var story in Model.Where(t => t.Estado == column.Status))
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5>@story.Nombre</h5>
+                        <p>@story.Descripcion</p>
+                        
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
