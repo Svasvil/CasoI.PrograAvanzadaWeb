@@ -28,7 +28,8 @@ namespace CasoI.API.BussinessLogic.Logic
                 task.Nombre,
                 task.Descripcion,
                 task.Estado,
-               task.AsignadoA
+               task.AsignadoA,
+               task.Dificultad
 
             )).ToList();
         }
@@ -41,27 +42,35 @@ namespace CasoI.API.BussinessLogic.Logic
                 task.Nombre,
                 task.Descripcion,
                 task.Estado,
-                task.AsignadoA
+                task.AsignadoA,
+                task.Dificultad
 
             );
         }
 
         public async Task<CreateTaskDTO> CreateTask(CreateTaskDTO dto)
         {
+            using var http = new HttpClient();
+
+            var estimate = await http.GetFromJsonAsync<int>("http://localhost:5285/api/estimate");
             var newTask = new BoardViewModel
             {
                 Nombre = dto.Nombre,
                 Descripcion = dto.Descripcion,
                 Estado = UserStoryStatus.Backlog,
-                  AsignadoA = dto.AsignadoA
+                AsignadoA = dto.AsignadoA,
+                Dificultad = estimate   
             };
+
             await _Task.AddAsync(newTask);
+
             return new CreateTaskDTO(
                 newTask.Id,
                 newTask.Nombre,
                 newTask.Descripcion,
                 newTask.Estado,
-                newTask.AsignadoA
+                newTask.AsignadoA,
+                newTask.Dificultad
             );
         }
 

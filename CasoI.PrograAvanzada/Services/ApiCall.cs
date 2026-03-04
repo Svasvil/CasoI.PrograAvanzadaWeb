@@ -22,9 +22,9 @@ namespace CasoI.PrograAvanzada.Services
                    ?? new List<TaskModelView>();
         }
         
-        public async Task CreateTaskAyncs(string Nombre, string Descripcion,string asignadoA, CancellationToken cancellation = default)
+        public async Task CreateTaskAyncs(string Nombre, string Descripcion,string asignadoA,int dificultad, CancellationToken cancellation = default)
         {
-           await  _Conexion.PostAsJsonAsync("api/Task", new TaskModelView { Nombre = Nombre, Descripcion = Descripcion , AsignadoA = asignadoA }, cancellation);
+           await  _Conexion.PostAsJsonAsync("api/Task", new TaskModelView { Nombre = Nombre, Descripcion = Descripcion , AsignadoA = asignadoA , Dificultad= dificultad }, cancellation);
         }
 
         public async Task NextTaskAsync(int id, CancellationToken cancellation = default)

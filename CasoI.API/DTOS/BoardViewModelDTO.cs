@@ -11,6 +11,8 @@ int id,
             string Descripcion,
               UserStoryStatus Estado,
             string AsignadoA
+                 
+
           );
     }
 }
