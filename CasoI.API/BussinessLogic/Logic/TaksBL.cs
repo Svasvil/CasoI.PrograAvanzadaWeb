@@ -52,7 +52,8 @@ namespace CasoI.API.BussinessLogic.Logic
             {
                 Nombre = dto.Nombre,
                 Descripcion = dto.Descripcion,
-                Estado = UserStoryStatus.Backlog
+                Estado = UserStoryStatus.Backlog,
+                  AsignadoA = dto.AsignadoA
             };
             await _Task.AddAsync(newTask);
             return new CreateTaskDTO(
