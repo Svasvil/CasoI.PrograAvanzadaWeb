@@ -9,7 +9,8 @@ namespace CasoI.API.DTOS
 int id,
               string Nombre,
             string Descripcion,
-              UserStoryStatus Estado
+              UserStoryStatus Estado,
+            string AsignadoA
           );
     }
 }

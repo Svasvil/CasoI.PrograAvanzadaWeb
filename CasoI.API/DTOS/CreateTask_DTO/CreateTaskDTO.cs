@@ -6,6 +6,7 @@ namespace CasoI.API.DTOS.CreateTask_DTO
         int id,
         string Nombre,
         string Descripcion,
-        UserStoryStatus Estado
+        UserStoryStatus Estado,
+        string AsignadoA
     );
 }

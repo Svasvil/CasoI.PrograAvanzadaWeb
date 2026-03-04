@@ -22,7 +22,6 @@ namespace CasoI.API.Controllers
             }
             catch (Exception ex)
             {
-                // Esto detendrá la API aquí y podrás ver el error real en 'ex'
                 return StatusCode(500, ex.Message);
             }
         }
@@ -49,5 +48,7 @@ namespace CasoI.API.Controllers
             if (!ok) return BadRequest();
             return NoContent();
         }
+    
     }
+
 }

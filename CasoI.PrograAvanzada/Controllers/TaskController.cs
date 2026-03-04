@@ -15,11 +15,12 @@ namespace CasoI.PrograAvanzada.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask(string Nombre, string Descripcion, CancellationToken cancellation)
+        public async Task<IActionResult> CreateTask(string Nombre, string Descripcion, string AsignadoA, CancellationToken cancellation)
         {
+            if (string.IsNullOrWhiteSpace(Nombre) || string.IsNullOrWhiteSpace(Descripcion))
+                return BadRequest("Campos Requeridos");
 
-            if (string.IsNullOrWhiteSpace(Nombre) || string.IsNullOrWhiteSpace(Descripcion)) return BadRequest("Campos Requeridos");
-            await TheCall.CreateTaskAyncs(Nombre, Descripcion, cancellation);
+            await TheCall.CreateTaskAyncs(Nombre, Descripcion, AsignadoA);
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]

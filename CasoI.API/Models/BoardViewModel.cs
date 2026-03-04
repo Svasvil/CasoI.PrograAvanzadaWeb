@@ -8,5 +8,7 @@
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public UserStoryStatus Estado { get; set; } = UserStoryStatus.Backlog;
+
+        public  string? AsignadoA { get; set; }
     }
 }

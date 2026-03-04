@@ -27,7 +27,9 @@ namespace CasoI.API.BussinessLogic.Logic
                 task.Id,
                 task.Nombre,
                 task.Descripcion,
-                task.Estado
+                task.Estado,
+               task.AsignadoA
+
             )).ToList();
         }
 
@@ -38,7 +40,9 @@ namespace CasoI.API.BussinessLogic.Logic
                 task.Id,
                 task.Nombre,
                 task.Descripcion,
-                task.Estado
+                task.Estado,
+                task.AsignadoA
+
             );
         }
 
@@ -55,7 +59,8 @@ namespace CasoI.API.BussinessLogic.Logic
                 newTask.Id,
                 newTask.Nombre,
                 newTask.Descripcion,
-                newTask.Estado
+                newTask.Estado,
+                newTask.AsignadoA
             );
         }
 
