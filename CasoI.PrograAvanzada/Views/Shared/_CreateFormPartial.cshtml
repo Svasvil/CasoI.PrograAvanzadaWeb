@@ -1,0 +1,20 @@
+﻿@model TaskModelView
+
+<form id="createTaskForm" method="post" asp-action="CreateTask" class="card p-3" style="width:400px;">
+    <div class="mb-2">
+        <label asp-for="Nombre">Nombre</label>
+        <input asp-for="Nombre" class="form-control" required />
+    </div>
+
+    <div class="mb-2">
+        <label asp-for="Descripcion">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control" required></textarea>
+    </div>
+
+    <div class="mb-2">
+        <label asp-for="AsignadoA">Asignado a</label>
+        <input asp-for="AsignadoA" class="form-control" />
+    </div>
+
+    <button id="crearTareaBtn" type="submit" class="btn btn-success w-100">Crear tarea</button>
+</form>

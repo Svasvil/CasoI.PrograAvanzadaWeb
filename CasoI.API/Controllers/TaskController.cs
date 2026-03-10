@@ -12,22 +12,14 @@ namespace CasoI.API.Controllers
         public TaskController(I_TaskBL TaskBL) => _TaskBL = TaskBL;
 
         [HttpGet]
-        public async Task<ActionResult<List<CreateTaskDTO>>> GetAllTasks()
+        public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var result = await _TaskBL.GetAllTasks();
-                if (result == null) return Ok(new List<CreateTaskDTO>());
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var result = await _TaskBL.GetAllTasks();
+            return Ok(result ?? new List<CreateTaskDTO>());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CreateTaskDTO>> GetTaskById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var task = await _TaskBL.GetTaskById(id);
             if (task is null) return NotFound();
@@ -35,10 +27,11 @@ namespace CasoI.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateTaskDTO>> CreateTask(CreateTaskDTO dto)
+        public async Task<IActionResult> CreateTask(CreateTaskDTO model)
         {
-            var Task2 = await _TaskBL.CreateTask(dto);
-            return CreatedAtAction(nameof(GetTaskById), new { id = Task2.id }, Task2);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            await _TaskBL.CreateTask(model);
+            return Ok();
         }
 
         [HttpPost("{id}/advance")]
@@ -46,9 +39,7 @@ namespace CasoI.API.Controllers
         {
             var ok = await _TaskBL.AdvanceStateAsync(id);
             if (!ok) return BadRequest();
-            return NoContent();
+            return Ok();
         }
-    
     }
-
 }
