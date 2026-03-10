@@ -1,0 +1,17 @@
+﻿@model IEnumerable<TaskModelView>
+
+@{
+    var columnName = ViewData["ColumnName"]?.ToString();
+    var colorClass = ViewData["ColorClass"]?.ToString();
+    var icon = ViewData["IconoDone"]?.ToString();
+}
+
+<div class="column">
+    <div class="column-header @colorClass">@columnName</div>
+    <div class="column-body">
+        @foreach (var t in Model)
+        {
+            @await Html.PartialAsync("_StoryCard", t)
+        }
+    </div>
+</div>

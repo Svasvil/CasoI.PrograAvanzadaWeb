@@ -1,0 +1,19 @@
+﻿@model TaskModelView
+
+<div class="card mb-2">
+    <div class="card-body p-2">
+        <strong>@Model.Nombre</strong>
+        <p class="mb-1">@Model.Descripcion</p>
+        <small class="text-muted">@Model.AsignadoA</small><br />
+        <small>Estimación: @Model.Dificultad</small><br />
+        <small>Estado: @Model.Estado</small>
+
+        @if (Model.Estado != UserStoryStatus.Done)
+        {
+            <form method="post" asp-action="NextTask">
+                <input type="hidden" name="id" value="@Model.id" />
+                <button type="submit" class="btn btn-primary btn-sm mt-1">Avanzar</button>
+            </form>
+        }
+    </div>
+</div>

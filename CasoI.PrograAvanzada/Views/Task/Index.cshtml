@@ -13,9 +13,10 @@
 
 <div class="mb-4 d-flex justify-content-center">
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearTarea">
-        + Nueva Tarea
+         Nueva Tarea
     </button>
 </div>
+
 <div class="modal fade" id="modalCrearTarea" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -29,108 +30,38 @@
         </div>
     </div>
 </div>
+<script src="~/js/javascript.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('createTaskForm');
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            Swal.fire({
-                title: '¿Crear nueva tarea?',
-                text: '¿Estás seguro de que deseas crear esta tarea?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, crear',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    });
-</script>
 
 <div class="board d-flex justify-content-center gap-3">
 
-    <div class="column">
-        <div class="column-header @ViewData["ColorBacklog"]">Backlog</div>
-        <div class="column-body">
-            @foreach (var t in Model.Where(x => x.Estado == UserStoryStatus.Backlog).OrderBy(x => x.id))
-            {
-                <div class="card mb-2">
-                    <div class="card-body p-2">
-                        <strong>@t.Nombre</strong>
-                        <p class="mb-1">@t.Descripcion</p>
-                        <small class="text-muted">@t.AsignadoA</small><br />
-                        <small>Estimación: @t.Dificultad</small>
-                        <form method="post" asp-action="NextTask">
-                            <input type="hidden" name="id" value="@t.id" />
-                            <button type="submit" class="btn btn-primary btn-sm mt-1">Avanzar</button>
-                        </form>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
+    @await Html.PartialAsync("_Column",
+    Model.Where(x => x.Estado == UserStoryStatus.Backlog).OrderBy(x => x.id),
+        new ViewDataDictionary(ViewData) {
+        { "ColumnName", "Backlog" },
+        { "ColorClass", "bg-secondary" }
+        })
 
-    <div class="column">
-        <div class="column-header @ViewData["ColorToDo"]">To Do</div>
-        <div class="column-body">
-            @foreach (var t in Model.Where(x => x.Estado == UserStoryStatus.ToDo).OrderBy(x => x.id))
-            {
-                <div class="card mb-2">
-                    <div class="card-body p-2">
-                        <strong>@t.Nombre</strong>
-                        <p class="mb-1">@t.Descripcion</p>
-                        <small class="text-muted">@t.AsignadoA</small><br />
-                        <small>Estimación: @t.Dificultad</small>
-                        <form method="post" asp-action="NextTask">
-                            <input type="hidden" name="id" value="@t.id" />
-                            <button type="submit" class="btn btn-primary btn-sm mt-1">Avanzar</button>
-                        </form>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
+    @await Html.PartialAsync("_Column",
+        Model.Where(x => x.Estado == UserStoryStatus.ToDo).OrderBy(x => x.id),
+        new ViewDataDictionary(ViewData) {
+        { "ColumnName", "To Do" },
+        { "ColorClass", "bg-primary" }
+        })
 
-    <div class="column">
-        <div class="column-header @ViewData["ColorInProgress"]">In Progress</div>
-        <div class="column-body">
-            @foreach (var t in Model.Where(x => x.Estado == UserStoryStatus.InProgress).OrderBy(x => x.id))
-            {
-                <div class="card mb-2">
-                    <div class="card-body p-2">
-                        <strong>@t.Nombre</strong>
-                        <p class="mb-1">@t.Descripcion</p>
-                        <small class="text-muted">@t.AsignadoA</small><br />
-                        <small>Estimación: @t.Dificultad</small>
-                        <form method="post" asp-action="NextTask">
-                            <input type="hidden" name="id" value="@t.id" />
-                            <button type="submit" class="btn btn-warning btn-sm mt-1">Avanzar</button>
-                        </form>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
+    @await Html.PartialAsync("_Column",
+        Model.Where(x => x.Estado == UserStoryStatus.InProgress).OrderBy(x => x.id),
+        new ViewDataDictionary(ViewData) {
+        { "ColumnName", "In Progress" },
+        { "ColorClass", "bg-warning" }
+        })
 
-    <div class="column">
-        <div class="column-header @ViewData["ColorDone"]">Done</div>
-        <div class="column-body">
-            @foreach (var t in Model.Where(x => x.Estado == UserStoryStatus.Done).OrderBy(x => x.id))
-            {
-                <div class="card mb-2">
-                    <div class="card-body p-2">
-                        <strong>@t.Nombre</strong>
-                        <p class="mb-1">@t.Descripcion</p>
-                        <small class="text-muted">@t.AsignadoA</small><br />
-                        <small>Dificultad: @t.Dificultad</small>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
+    @await Html.PartialAsync("_Column",
+        Model.Where(x => x.Estado == UserStoryStatus.Done).OrderBy(x => x.id),
+        new ViewDataDictionary(ViewData) {
+        { "ColumnName", "Done" },
+        { "ColorClass", "bg-success" },
+        {"IconoDone","✅"}
+        })
 
 </div>
