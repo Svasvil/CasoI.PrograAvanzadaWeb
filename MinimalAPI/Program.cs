@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var valoresDificultad = new[] { 2, 3, 5, 8, 13 };
+var valoresDificultad = new[] { 2, 3, 5, 8, 13,21,22,26,30 };
 
 app.MapGet("/api/estimate", () =>
 {

@@ -5,14 +5,22 @@
         <strong>@Model.Nombre</strong>
         <p class="mb-1">@Model.Descripcion</p>
         <small class="text-muted">@Model.AsignadoA</small><br />
-        <small>Estimación: @Model.Dificultad</small><br />
+
+        <small>Estimacion: @Model.Dificultad</small>
+
+        @if (Model.Dificultad > 10)
+        {
+            <span class="badge bg-danger ms-1">Estimacion  alta</span>
+        }
+
+        <br />
         <small>Estado: @Model.Estado</small>
 
         @if (Model.Estado != UserStoryStatus.Done)
         {
             <form method="post" asp-action="NextTask">
                 <input type="hidden" name="id" value="@Model.id" />
-                <button type="submit" class="btn btn-primary btn-sm mt-1">Avanzar</button>
+                <button type="submit" class="btn btn-primary btn-sm mt-1">-></button>
             </form>
         }
     </div>
