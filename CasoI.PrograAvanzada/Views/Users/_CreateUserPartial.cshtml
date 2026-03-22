@@ -1,0 +1,35 @@
+﻿@model CasoI.PrograAvanzada.Models.UsersModelView
+
+<form asp-action="CreateUser" asp-controller="Users" method="post">
+    <div class="modal-body">
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label">Nombre</label>
+            <input asp-for="Nombre" class="form-control" placeholder="Ej: Ash" required />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Apellidos" class="form-label">Apellidos</label>
+            <input asp-for="Apellidos" class="form-control" placeholder="Ej: Ketchum" required />
+            <span asp-validation-for="Apellidos" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="email" class="form-label">Correo Electrónico</label>
+            <input asp-for="email" type="email" class="form-control" placeholder="pueblopaleta@example.com" required />
+            <span asp-validation-for="email" class="text-danger"></span>
+        </div>
+
+    
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Registrar Usuario</button>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
