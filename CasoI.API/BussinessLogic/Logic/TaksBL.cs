@@ -1,24 +1,16 @@
 ﻿using CasoI.API.BussinessLogic.Interfaces;
 using CasoI.API.Data;
 using CasoI.API.DataAccess.Interfaces;
-using CasoI.API.DTOS;
 using CasoI.API.DTOS.CreateTask_DTO;
 using CasoI.API.Models.BoardViewModel;
-using System;
-
+using System.Linq;
 
 namespace CasoI.API.BussinessLogic.Logic
 {
     public class TaskBL : I_TaskBL
     {
-
-        private readonly ObjContexto _db;
-
-
         private readonly I_TaskDA _Task;
-
         public TaskBL(I_TaskDA task) => _Task = task;
-
 
         public async Task<List<CreateTaskDTO>> GetAllTasks()
         {
@@ -28,9 +20,10 @@ namespace CasoI.API.BussinessLogic.Logic
                 task.Nombre,
                 task.Descripcion,
                 task.Estado,
-               task.AsignadoA,
-               task.Dificultad
-
+                task.UserId,
+                task.AsignadoA?.Nombre + " " + task.AsignadoA?.Apellidos,
+                task.AsignadoA?.PokeApiAvatar.ToString(),
+                task.Dificultad
             )).ToList();
         }
 
@@ -42,34 +35,34 @@ namespace CasoI.API.BussinessLogic.Logic
                 task.Nombre,
                 task.Descripcion,
                 task.Estado,
-                task.AsignadoA,
+                task.UserId,
+                task.AsignadoA?.Nombre + " " + task.AsignadoA?.Apellidos, // ✅ Corregido
+                task.AsignadoA?.PokeApiAvatar.ToString(),                  // ✅ Corregido
                 task.Dificultad
-
             );
         }
 
         public async Task<CreateTaskDTO> CreateTask(CreateTaskDTO dto)
         {
             using var http = new HttpClient();
-
             var estimate = await http.GetFromJsonAsync<int>("http://localhost:5285/api/estimate");
             var newTask = new BoardViewModel
             {
                 Nombre = dto.Nombre,
                 Descripcion = dto.Descripcion,
                 Estado = UserStoryStatus.Backlog,
-                AsignadoA = dto.AsignadoA,
-                Dificultad = estimate   
+                UserId = dto.UserId,
+                Dificultad = estimate
             };
-
             await _Task.AddAsync(newTask);
-
             return new CreateTaskDTO(
                 newTask.Id,
                 newTask.Nombre,
                 newTask.Descripcion,
                 newTask.Estado,
-                newTask.AsignadoA,
+                newTask.UserId,
+                null, // AsignadoA no disponible tras AddAsync
+                null, // PokeApiAvatar no disponible tras AddAsync
                 newTask.Dificultad
             );
         }
@@ -78,7 +71,6 @@ namespace CasoI.API.BussinessLogic.Logic
         {
             var task = await _Task.GetTaskById(id);
             if (task == null) return false;
-
             switch (task.Estado)
             {
                 case UserStoryStatus.Backlog:
@@ -93,10 +85,8 @@ namespace CasoI.API.BussinessLogic.Logic
                 case UserStoryStatus.Done:
                     return false;
             }
-
             await _Task.UpdateAsync(task);
             return true;
         }
-
     }
 }

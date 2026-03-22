@@ -11,9 +11,12 @@
         <textarea asp-for="Descripcion" class="form-control" required></textarea>
     </div>
 
-    <div class="mb-2">
-        <label asp-for="AsignadoA">Asignado a</label>
-        <input asp-for="AsignadoA" class="form-control" />
+    <div class="mb-3">
+        <label class="form-label">Persona Asignada</label>
+        <select asp-for="UserId" asp-items="ViewBag.Users" class="form-select">
+            <option value="">-- Seleccione un usuario --</option>
+        </select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
     </div>
 
     <button id="crearTareaBtn" type="submit" class="btn btn-success w-100">Crear tarea</button>

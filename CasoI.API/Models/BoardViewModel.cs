@@ -9,7 +9,8 @@
         public string Descripcion { get; set; }
         public UserStoryStatus Estado { get; set; } = UserStoryStatus.Backlog;
 
-        public  string? AsignadoA { get; set; }
-         public   int  Dificultad{ get; set; }
+        public int UserId { get; set; }
+        public UsersModel? AsignadoA { get; set; }
+        public   int  Dificultad{ get; set; }
     }
 }

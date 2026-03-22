@@ -18,13 +18,13 @@ namespace CasoI.PrograAvanzada.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(string Nombre, string Apellidos, string email, CancellationToken cancellation)
+        public async Task<IActionResult> CreateUser(string Nombre, string Apellidos, string email)
         {
             if (string.IsNullOrWhiteSpace(Nombre) || string.IsNullOrWhiteSpace(Apellidos) || string.IsNullOrWhiteSpace(email))
                 return BadRequest("Campos Requeridos");
-            await TheCall.CreateUserAyncs(Nombre, Apellidos, email, 0, cancellation);
-            return RedirectToAction(nameof(Index));
 
+            await TheCall.CreateUserAyncs(Nombre, Apellidos, email, 0);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

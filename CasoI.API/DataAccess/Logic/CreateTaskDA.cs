@@ -9,8 +9,10 @@ namespace CasoI.API.DataAccess.Logic
     {
         private  readonly ObjContexto _context;
         public CreateTaskDA(ObjContexto context) => _context = context;
-        public async Task <List<BoardViewModel>> GetAllTasks()=> await _context.Task.AsNoTracking().ToListAsync();
-
+        public async Task<List<BoardViewModel>> GetAllTasks() => await _context.Task
+                .Include(t => t.AsignadoA) 
+                .AsNoTracking()
+                .ToListAsync();
         public async Task<BoardViewModel?> GetTaskById(int id) => await _context.Task.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
 
         public async Task AddAsync(BoardViewModel task)

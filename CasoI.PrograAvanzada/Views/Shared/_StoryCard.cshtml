@@ -1,21 +1,31 @@
 ﻿@model TaskModelView
+@using CasoI.PrograAvanzada.Models
 
 <div class="card mb-2">
     <div class="card-body p-2">
         <strong>@Model.Nombre</strong>
         <p class="mb-1">@Model.Descripcion</p>
-        <small class="text-muted">@Model.AsignadoA</small><br />
+
+        <div class="d-flex align-items-center gap-2 mb-1">
+            @if (!string.IsNullOrEmpty(Model.AvatarAsignado))
+            {
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/@(Model.AvatarAsignado).png"
+                     alt="Avatar"
+                     width="35"
+                     height="35" />
+            }
+            <small class="text-muted">
+                @(Model.NombreAsignado ?? "Sin asignar")
+            </small>
+        </div>
 
         <small>Estimacion: @Model.Dificultad</small>
-
         @if (Model.Dificultad > 10)
         {
-            <span class="badge bg-danger ms-1">Estimacion  alta</span>
+            <span class="badge bg-danger ms-1">Estimacion alta</span>
         }
-
         <br />
         <small>Estado: @Model.Estado</small>
-
         @if (Model.Estado != UserStoryStatus.Done)
         {
             <form method="post" asp-action="NextTask">

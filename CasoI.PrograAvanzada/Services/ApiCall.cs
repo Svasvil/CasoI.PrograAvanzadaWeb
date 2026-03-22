@@ -21,10 +21,17 @@ namespace CasoI.PrograAvanzada.Services
             return await _Conexion.GetFromJsonAsync<List<TaskModelView>>("api/Task", options, canc)
                    ?? new List<TaskModelView>();
         }
-        
-        public async Task CreateTaskAyncs(string Nombre, string Descripcion,string asignadoA,int dificultad, CancellationToken cancellation = default)
+        public async Task CreateTaskAyncs(string Nombre, string Descripcion, int userId, int dificultad, CancellationToken cancellation = default)
         {
-           await  _Conexion.PostAsJsonAsync("api/Task", new TaskModelView { Nombre = Nombre, Descripcion = Descripcion , AsignadoA = asignadoA , Dificultad= dificultad }, cancellation);
+            var response = await _Conexion.PostAsJsonAsync("api/Task", new
+            {
+                Nombre = Nombre,
+                Descripcion = Descripcion,
+                UserId = userId,    
+                Dificultad = dificultad
+            }, cancellation);
+
+            response.EnsureSuccessStatusCode(); 
         }
 
         public async Task NextTaskAsync(int id, CancellationToken cancellation = default)
