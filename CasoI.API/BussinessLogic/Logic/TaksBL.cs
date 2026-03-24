@@ -36,8 +36,8 @@ namespace CasoI.API.BussinessLogic.Logic
                 task.Descripcion,
                 task.Estado,
                 task.UserId,
-                task.AsignadoA?.Nombre + " " + task.AsignadoA?.Apellidos, // ✅ Corregido
-                task.AsignadoA?.PokeApiAvatar.ToString(),                  // ✅ Corregido
+                task.AsignadoA?.Nombre + " " + task.AsignadoA?.Apellidos, 
+                task.AsignadoA?.PokeApiAvatar.ToString(),                 
                 task.Dificultad
             );
         }
@@ -61,8 +61,8 @@ namespace CasoI.API.BussinessLogic.Logic
                 newTask.Descripcion,
                 newTask.Estado,
                 newTask.UserId,
-                null, // AsignadoA no disponible tras AddAsync
-                null, // PokeApiAvatar no disponible tras AddAsync
+                null, 
+                null, 
                 newTask.Dificultad
             );
         }

@@ -7,7 +7,7 @@ namespace CasoI.API.Controllers
 {
     [ApiController]
     [Route("api/Users")]
-    public class UserController : ControllerBase //
+    public class UserController : ControllerBase 
     {
         private readonly I_UsersBL _usersBL;
         public UserController(I_UsersBL usersBL) => _usersBL = usersBL;
