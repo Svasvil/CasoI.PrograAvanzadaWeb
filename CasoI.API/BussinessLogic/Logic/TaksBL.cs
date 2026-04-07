@@ -1,4 +1,5 @@
 ﻿using CasoI.API.BussinessLogic.Interfaces;
+using CasoI.API.BussinessLogic.Interfaces.Factory;
 using CasoI.API.DataAccess.Interfaces;
 using CasoI.API.DTOS.CreateTask_DTO;
 using CasoI.API.Models.BoardViewModel;
@@ -10,6 +11,8 @@ namespace CasoI.API.BussinessLogic.Logic
     {
         private readonly I_TaskDA _Task;
         private readonly List<ITaskObserver> _observers = new();
+        private readonly IBoardViewModelFactory _factory; 
+
 
         public TaskBL(I_TaskDA task, IEnumerable<ITaskObserver> observers)
         {
@@ -22,31 +25,16 @@ namespace CasoI.API.BussinessLogic.Logic
             using var http = new HttpClient();
             var estimate = await http.GetFromJsonAsync<int>("http://localhost:5285/api/estimate");
 
-            var newTask = new BoardViewModel
-            {
-                Nombre = dto.Nombre,
-                Descripcion = dto.Descripcion,
-                Estado = UserStoryStatus.Backlog,
-                UserId = dto.UserId,
-                Dificultad = estimate
-            };
+            // ✅ TaskBL ya no sabe cómo se construye el objeto
+            var newTask = _factory.Create(dto, estimate);
 
             await _Task.AddAsync(newTask);
-
             foreach (var observer in _observers)
-            {
                 await observer.NotifyAsync(newTask);
-            }
 
             return new CreateTaskDTO(
-                newTask.Id,
-                newTask.Nombre,
-                newTask.Descripcion,
-                newTask.Estado,
-                newTask.UserId,
-                null,
-                null,
-                newTask.Dificultad
+                newTask.Id, newTask.Nombre, newTask.Descripcion,
+                newTask.Estado, newTask.UserId, null, null, newTask.Dificultad
             );
         }
 
