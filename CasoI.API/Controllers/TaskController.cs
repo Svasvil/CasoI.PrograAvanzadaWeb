@@ -30,8 +30,10 @@ namespace CasoI.API.Controllers
         public async Task<IActionResult> CreateTask(CreateTaskDTO model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            await _TaskBL.CreateTask(model);
-            return Ok();
+
+            var result = await _TaskBL.CreateTask(model);
+
+            return Ok(result);
         }
 
         [HttpPost("{id}/advance")]

@@ -26,6 +26,7 @@ namespace CasoI.PrograAvanzada.Controllers
             ViewData["ColorToDo"] = "bg-primary";
             ViewData["ColorInProgress"] = "bg-warning";
             ViewData["ColorDone"] = "bg-success";
+
             return View(list.OrderBy(t => t.id));
         }
         [HttpPost]
@@ -34,10 +35,15 @@ namespace CasoI.PrograAvanzada.Controllers
             if (string.IsNullOrWhiteSpace(Nombre) || string.IsNullOrWhiteSpace(Descripcion))
                 return BadRequest("Campos Requeridos");
 
-            await TheCall.CreateTaskAyncs(Nombre, Descripcion, UserId, 0, cancellation);
+            var taskCreada = await TheCall.CreateTaskAyncs(Nombre, Descripcion, UserId, 0, cancellation);
+
+            if (taskCreada.Dificultad > 7) 
+            {
+                TempData["AltaDificultad"] = $"La tarea '{Nombre}' tiene una estimación alta: {taskCreada.Dificultad}";
+            }
+
             return RedirectToAction(nameof(Index));
         }
-
         [HttpPost]
         public async Task<IActionResult> NextTask(int id)
         {

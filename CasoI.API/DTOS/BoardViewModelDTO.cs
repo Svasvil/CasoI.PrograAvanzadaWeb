@@ -6,7 +6,7 @@ namespace CasoI.API.DTOS
     public class BoardViewModelDTO
     {
         public record CreateTaskDTO(
-int id,
+                int id,
               string Nombre,
             string Descripcion,
               UserStoryStatus Estado,

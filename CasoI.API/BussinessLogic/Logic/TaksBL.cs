@@ -1,51 +1,27 @@
 ﻿using CasoI.API.BussinessLogic.Interfaces;
-using CasoI.API.Data;
 using CasoI.API.DataAccess.Interfaces;
 using CasoI.API.DTOS.CreateTask_DTO;
 using CasoI.API.Models.BoardViewModel;
-using System.Linq;
+using System.Net.Http.Json;
 
 namespace CasoI.API.BussinessLogic.Logic
 {
     public class TaskBL : I_TaskBL
     {
         private readonly I_TaskDA _Task;
-        public TaskBL(I_TaskDA task) => _Task = task;
+        private readonly List<ITaskObserver> _observers = new();
 
-        public async Task<List<CreateTaskDTO>> GetAllTasks()
+        public TaskBL(I_TaskDA task, IEnumerable<ITaskObserver> observers)
         {
-            var list = await _Task.GetAllTasks();
-            return list.Select(task => new CreateTaskDTO(
-                task.Id,
-                task.Nombre,
-                task.Descripcion,
-                task.Estado,
-                task.UserId,
-                task.AsignadoA?.Nombre + " " + task.AsignadoA?.Apellidos,
-                task.AsignadoA?.PokeApiAvatar.ToString(),
-                task.Dificultad
-            )).ToList();
-        }
-
-        public async Task<CreateTaskDTO?> GetTaskById(int id)
-        {
-            var task = await _Task.GetTaskById(id);
-            return task is null ? null : new CreateTaskDTO(
-                task.Id,
-                task.Nombre,
-                task.Descripcion,
-                task.Estado,
-                task.UserId,
-                task.AsignadoA?.Nombre + " " + task.AsignadoA?.Apellidos, 
-                task.AsignadoA?.PokeApiAvatar.ToString(),                 
-                task.Dificultad
-            );
+            _Task = task;
+            _observers.AddRange(observers);
         }
 
         public async Task<CreateTaskDTO> CreateTask(CreateTaskDTO dto)
         {
             using var http = new HttpClient();
             var estimate = await http.GetFromJsonAsync<int>("http://localhost:5285/api/estimate");
+
             var newTask = new BoardViewModel
             {
                 Nombre = dto.Nombre,
@@ -54,15 +30,22 @@ namespace CasoI.API.BussinessLogic.Logic
                 UserId = dto.UserId,
                 Dificultad = estimate
             };
+
             await _Task.AddAsync(newTask);
+
+            foreach (var observer in _observers)
+            {
+                await observer.NotifyAsync(newTask);
+            }
+
             return new CreateTaskDTO(
                 newTask.Id,
                 newTask.Nombre,
                 newTask.Descripcion,
                 newTask.Estado,
                 newTask.UserId,
-                null, 
-                null, 
+                null,
+                null,
                 newTask.Dificultad
             );
         }
@@ -71,22 +54,35 @@ namespace CasoI.API.BussinessLogic.Logic
         {
             var task = await _Task.GetTaskById(id);
             if (task == null) return false;
+
             switch (task.Estado)
             {
-                case UserStoryStatus.Backlog:
-                    task.Estado = UserStoryStatus.ToDo;
-                    break;
-                case UserStoryStatus.ToDo:
-                    task.Estado = UserStoryStatus.InProgress;
-                    break;
-                case UserStoryStatus.InProgress:
-                    task.Estado = UserStoryStatus.Done;
-                    break;
-                case UserStoryStatus.Done:
-                    return false;
+                case UserStoryStatus.Backlog: task.Estado = UserStoryStatus.ToDo; break;
+                case UserStoryStatus.ToDo: task.Estado = UserStoryStatus.InProgress; break;
+                case UserStoryStatus.InProgress: task.Estado = UserStoryStatus.Done; break;
+                default: return false;
             }
+
             await _Task.UpdateAsync(task);
+
+            foreach (var observer in _observers)
+            {
+                await observer.NotifyAsync(task);
+            }
+
             return true;
+        }
+
+        public async Task<List<CreateTaskDTO>> GetAllTasks()
+        {
+            var list = await _Task.GetAllTasks();
+            return list.Select(t => new CreateTaskDTO(t.Id, t.Nombre, t.Descripcion, t.Estado, t.UserId, t.AsignadoA?.Nombre, null, t.Dificultad)).ToList();
+        }
+
+        public async Task<CreateTaskDTO?> GetTaskById(int id)
+        {
+            var t = await _Task.GetTaskById(id);
+            return t == null ? null : new CreateTaskDTO(t.Id, t.Nombre, t.Descripcion, t.Estado, t.UserId, t.AsignadoA?.Nombre, null, t.Dificultad);
         }
     }
 }
