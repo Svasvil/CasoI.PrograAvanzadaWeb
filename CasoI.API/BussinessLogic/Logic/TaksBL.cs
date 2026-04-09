@@ -11,13 +11,14 @@ namespace CasoI.API.BussinessLogic.Logic
     {
         private readonly I_TaskDA _Task;
         private readonly List<ITaskObserver> _observers = new();
-        private readonly IBoardViewModelFactory _factory; 
+        private readonly IBoardViewModelFactory _factory;
 
 
-        public TaskBL(I_TaskDA task, IEnumerable<ITaskObserver> observers)
+        public TaskBL(I_TaskDA task, IEnumerable<ITaskObserver> observers, IBoardViewModelFactory factory)
         {
             _Task = task;
             _observers.AddRange(observers);
+            _factory = factory; // <--- ASIGNAR LA INSTANCIA
         }
 
         public async Task<CreateTaskDTO> CreateTask(CreateTaskDTO dto)
@@ -25,7 +26,6 @@ namespace CasoI.API.BussinessLogic.Logic
             using var http = new HttpClient();
             var estimate = await http.GetFromJsonAsync<int>("http://localhost:5285/api/estimate");
 
-            // ✅ TaskBL ya no sabe cómo se construye el objeto
             var newTask = _factory.Create(dto, estimate);
 
             await _Task.AddAsync(newTask);

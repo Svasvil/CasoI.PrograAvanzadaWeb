@@ -35,14 +35,12 @@ namespace CasoI.PrograAvanzada.Services
 
             response.EnsureSuccessStatusCode();
 
-            // CONFIGURACIÓN DE OPCIONES: Agregamos el convertidor de Enums
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
-                Converters = { new JsonStringEnumConverter() } // Esto arregla el error del enum 'Estado'
+                Converters = { new JsonStringEnumConverter() } 
             };
 
-            // LEER LA RESPUESTA: Ahora sí podrá convertir "Backlog" al enum UserStoryStatus
             var resultado = await response.Content.ReadFromJsonAsync<TaskModelView>(options, cancellation);
 
             return resultado ?? new TaskModelView();
